@@ -175,4 +175,4 @@ cython_debug/
 
 #data 
 artists.csv
-spotify_artist_data_output.csv
+artist_album_popularity_full.csv
