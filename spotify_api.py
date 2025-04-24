@@ -16,12 +16,14 @@ sp = spotipy.Spotify(auth_manager=SpotifyClientCredentials(
     client_secret=auth.client_secret,
 ))
 
+results = []
+
 def spotify_popularity(artists_df):
 
     # Load festival artist CSV (columns: artist, year, shows)
     df_artists = artists_df
 
-    results = []
+    
 
     for _, row in tqdm(df_artists.iterrows(), total=len(df_artists), desc="Processing artists"):
         artist_name = row["artist"]

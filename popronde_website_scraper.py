@@ -8,7 +8,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 import pandas as pd
 
 BASE_URL = "https://popronde.nl/archief/"
-YEARS = range(2011, 2024)  # up to and including 2023
+YEARS = range(2011, 2016)  # up to and including 2023
 OUTPUT_FILE = "popronde_artists.csv"
 
 all_artists = []
