@@ -3,15 +3,17 @@ from spotipy.oauth2 import SpotifyOAuth
 from spotipy import Spotify
 from dotenv import load_dotenv
 import os
+import authentication as auth
 
 load_dotenv()
 
 app = FastAPI()
 
+
 sp_oauth = SpotifyOAuth(
-    client_id=os.getenv("SPOTIFY_CLIENT_ID"),
-    client_secret=os.getenv("SPOTIFY_CLIENT_SECRET"),
-    redirect_uri=os.getenv("SPOTIFY_REDIRECT_URI"),
+    client_id=auth.client_id,
+    client_secret=auth.client_secret,
+    redirect_uri='https://www.google.com/',
     scope="user-library-read"
 )
 
