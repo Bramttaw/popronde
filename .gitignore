@@ -175,4 +175,3 @@ cython_debug/
 
 #data 
 artists.csv
-artist_album_popularity_full.csv
