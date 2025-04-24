@@ -4,6 +4,7 @@ import csv
 import time
 import urllib3
 import certifi
+import re
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 BASE_URL = "https://popronde.nl/archief/"
@@ -23,23 +24,40 @@ for year in YEARS:
     
     soup = BeautifulSoup(response.text, "html.parser")
     
-    # Look for artist blocks
-    artist_blocks = soup.find_all("div", class_="row artiesten__row")
+    # Find the section containing artist names and genres
+    # Look for the header with text "Artiesten {year}"
+    header = soup.find(lambda tag: tag.name == "h2" and f"Artiesten {year}" in tag.text)
+    if not header:
+        print(f"Could not find the 'Artiesten {year}' section in {url}")
+        continue
 
-    for block in artist_blocks:
-        try:
-            name = block.find("p", class_="artiesten__name").text.strip()
-            genre = block.find("p", class_="artiesten__genre").text.strip()
-        except AttributeError:
-            # Skip blocks that don't follow the expected structure
-            continue
-        
-        all_artists.append({
-            "artist": name,
-            "genre": genre,
-            "year": year
-        })
+    # The artist information is typically in the next sibling after the header
+    artist_section = header.find_next_sibling()
+    if not artist_section:
+        print(f"Could not find artist section after header in {url}")
+        continue
 
+    # Extract text from the artist section
+    artist_text = artist_section.get_text(separator="\n")
+    lines = artist_text.strip().split("\n")
+
+    for line in lines:
+        line = line.strip()
+        if not line:
+            continue  # Skip empty lines
+        # Use regex to split the line into artist name and genre
+        match = re.match(r"^(.*?)\s+([A-Za-z &/]+)$", line)
+        if match:
+            name = match.group(1).strip()
+            genre = match.group(2).strip()
+            all_artists.append({
+                "artist": name,
+                "genre": genre,
+                "year": year
+            })
+        else:
+            print(f"Could not parse line: '{line}' in year {year}")
+    
     time.sleep(1)  # be kind to the server
 
 # Write to CSV
