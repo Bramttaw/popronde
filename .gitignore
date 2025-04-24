@@ -173,5 +173,6 @@ cython_debug/
 # PyPI configuration file
 .pypirc
 
-# Auth
-authentication.py
+#data 
+artists.csv
+spotify_artist_data_output.csv
